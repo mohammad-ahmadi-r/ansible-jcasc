@@ -1,0 +1,30 @@
+# - name: Copy JCasC system config
+#   copy:
+#     src: casc.yaml
+#     dest: /var/lib/jenkins/casc.yaml
+#     owner: jenkins
+#     group: jenkins
+#     mode: '0644'
+
+# # - name: Set JCasC environment variable
+# #   lineinfile:
+# #     path: /etc/default/jenkins
+# #     line: 'CASC_JENKINS_CONFIG=/var/lib/jenkins'
+# #     create: yes
+
+# # - name: Disable setup wizard
+# #   lineinfile:
+# #     path: /etc/default/jenkins
+# #     line: 'JENKINS_JAVA_OPTIONS="$JENKINS_JAVA_OPTIONS -Djenkins.install.runSetupWizard=false"'
+# #     create: yes
+
+# - name: Append runSetupWizard to JAVA_OPTS safely
+#   replace:
+#     path: /usr/lib/systemd/system/jenkins.service
+#     regexp: '^(Environment="JAVA_OPTS=.*)"$'
+#     replace: '\1 -Djenkins.install.runSetupWizard=false"'
+
+- name: Restart Jenkins
+  systemd:
+    name: jenkins
+    state: restarted

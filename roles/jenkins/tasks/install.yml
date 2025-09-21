@@ -1,0 +1,64 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install dependencies (fontconfig + OpenJDK 21)
+  apt:
+    name:
+      - fontconfig
+      - openjdk-21-jre
+    state: present
+
+- name: Verify Java installation
+  command: java -version
+  register: java_version
+  ignore_errors: yes
+
+- name: Show Java version
+  debug:
+    var: java_version.stderr_lines
+
+- name: Create keyrings directory
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Download Jenkins GPG key
+  get_url:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    dest: /etc/apt/keyrings/jenkins-keyring.asc
+    mode: '0644'
+
+- name: Add Jenkins repository
+  copy:
+    dest: /etc/apt/sources.list.d/jenkins.list
+    content: "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/\n"
+    mode: '0644'
+
+- name: Update apt cache after adding Jenkins repo
+  apt:
+    update_cache: yes
+
+- name: Install Jenkins
+  apt:
+    name: jenkins
+    state: present
+
+- name: Ensure Jenkins is running
+  systemd:
+    name: jenkins
+    enabled: yes
+    state: started
+
+- name: Get jenkins admin Password
+  command: "cat  /var/lib/jenkins/secrets/initialAdminPassword"
+  register:  out
+
+- name: Set Password Variable
+  set_fact:
+    jenkins_password1: "{{ out.stdout }}"
+
+- name: debug
+  debug:
+    msg: "password: {{jenkins_password1}}"

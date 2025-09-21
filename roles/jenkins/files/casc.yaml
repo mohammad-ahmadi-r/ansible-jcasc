@@ -1,0 +1,16 @@
+jenkins:
+  systemMessage: "Jenkins configured automatically with JCasC"
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "mamad"
+          password: "123456"
+          
+  authorizationStrategy:
+    projectMatrix:
+      entries:
+        - user:
+            name: mamad
+            permissions:
+              - Overall/Administer
