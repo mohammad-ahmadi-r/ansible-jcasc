@@ -1,4 +1,4 @@
-# ansible-jcasc
+# Ansible-Jcasc
 This project provides a fully automated solution to deploy, configure, and manage Jenkins using Ansible and Jenkins Configuration as Code (JCasC). 
 
 It handles everything from installing Java and Jenkins on a fresh server, to setting up plugins, creating secured pipeline jobs, managing credentials, and configuring multiple users with fine-grained permissions.
@@ -50,6 +50,19 @@ ansible-playbook playbook.yml -i inventory.ini -vv --ask-become-pass --ask-pass
 Remote call:
 ```bash
 curl http://<jenkins-username>:<jenkins-password>@<jekins-node>:<jenkins-port>/job/<folder-name>/job/<job-name>/build\?token=<auth-token>
+```
+---
+## Environment variables
+set it by changing jenkins.service to automate it
+or
+on jenkins node
+```bash
+Environment="JENKINS_PORT=8081"
+Environment="JENKINS_ADMIN=user"
+Environment="JENKINS_ADMIN_PASSWORD=password"
+Environment="GITHUB_CREDS=github-https-creds"
+Environment="GITHUB_USER=github-username"
+Environment="GITHUB_TOKEN=github-personal-access-token"
 ```
 ---
 ## Repository Structure
