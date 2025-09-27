@@ -1,4 +1,7 @@
+- include_tasks: precheck.yml
 - include_tasks: install.yml
-- include_tasks: configure.yml
+  when: not java_installed or not jenkins_installed
+- include_tasks: password-checker.yml
+# - include_tasks: configure.yml
 - include_tasks: install-plugins.yml
 - include_tasks: final-config.yml

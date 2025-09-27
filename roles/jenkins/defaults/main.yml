@@ -1,6 +1,7 @@
 ---
 # defaults file for part24-jenkins-jcasc
-jenkins_user: "admin"
+jenkins_user: "mamad"
+jenkins_password: "123456"
 jenkins_url: "http://127.0.0.1:8081"
 jenkins_pkgs:
   - fontconfig 
@@ -8,7 +9,7 @@ jenkins_pkgs:
   - jenkins
 jk_plugins:
   configuration-as-code:
-    enabled: true
+    enabled: True
   structs:
     enabled: True
   folders:
@@ -20,6 +21,8 @@ jk_plugins:
   matrix-auth:
     enabled: True
   job-dsl:
-    enabled: true
+    enabled: True
+  generic-webhook-trigger:
+    enabled: True
     # version: 1.79
     # pinned: true

@@ -1,16 +1,63 @@
 jenkins:
   systemMessage: "Jenkins configured automatically with JCasC"
+  
   securityRealm:
     local:
       allowsSignup: false
       users:
-        - id: "mamad"
+        - id: "${JENKINS_ADMIN}"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+        - id: "giter"
           password: "123456"
+
           
   authorizationStrategy:
     projectMatrix:
       entries:
         - user:
-            name: mamad
+            name: "${JENKINS_ADMIN}"
             permissions:
               - Overall/Administer
+        - user:
+            name: "giter"
+            permissions:
+              - Overall/Read
+              - Job/Build
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              id: "${GITHUB_CREDS}"
+              username: "${GITHUB_USER}"
+              password: "${GITHUB_TOKEN}"
+
+jobs:
+  - script: >
+      folder('MyFolder2') {
+        displayName('MyFolder2')
+        description('Folder for pipeline jobs')
+      }
+
+  - script: >
+      pipelineJob('MyFolder2/my-github-pipeline') {
+        triggers {
+          githubPush()
+        }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('https://github.com/${GITHUB_USER}/fastapi-jenkins.git')
+                  credentials('${GITHUB_CREDS}')
+                }
+                branches('*/main')
+              }
+            }
+            scriptPath('Jenkinsfile')
+          }
+        }
+      }
+

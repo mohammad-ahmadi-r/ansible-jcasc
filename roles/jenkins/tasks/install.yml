@@ -50,15 +50,3 @@
     name: jenkins
     enabled: yes
     state: started
-
-- name: Get jenkins admin Password
-  command: "cat  /var/lib/jenkins/secrets/initialAdminPassword"
-  register:  out
-
-- name: Set Password Variable
-  set_fact:
-    jenkins_password1: "{{ out.stdout }}"
-
-- name: debug
-  debug:
-    msg: "password: {{jenkins_password1}}"

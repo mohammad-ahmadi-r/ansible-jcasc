@@ -13,9 +13,9 @@
   file:
     path: /var/lib/jenkins/casc_configs/
     state: directory
-    owner: jenkins        # optional
-    group: jenkins        # optional
-    mode: '0755'          # optional
+    owner: jenkins
+    group: jenkins
+    mode: '0755'  
 
 - name: Copy JCasC system config
   copy:
@@ -27,36 +27,12 @@
 
 - name: Replace jenkins system config 
   copy:
-    src: jenkins.service   # file on your Ansible control machine
-    dest: /usr/lib/systemd/system/jenkins.service   # file on the target host
-    owner: jenkins                     # optional
-    group: jenkins                     # optional
-    mode: '0644'                       # optional
-    backup: yes                        # optional, keeps a backup of the old file
-
-# - name: Set JCasC environment variable
-#   lineinfile:
-#     path: /etc/default/jenkins
-#     line: 'CASC_JENKINS_CONFIG=/var/lib/jenkins'
-#     create: yes
-
-# - name: Disable setup wizard
-#   lineinfile:
-#     path: /usr/lib/systemd/system/jenkins.service
-#     line: 'Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"'
-#     create: no
-
-# - name: Refrence casc file
-#   lineinfile:
-#     path: /usr/lib/systemd/system/jenkins.service
-#     line: 'Environment="CASC_JENKINS_CONFIG=/var/lib/jenkins/casc_configs/casc.yaml"'
-#     create: no
-
-# - name: Change port
-#   lineinfile:
-#     path: /usr/lib/systemd/system/jenkins.service
-#     line: 'Environment="JENKINS_PORT=8081"'
-#     create: no
+    src: jenkins.service
+    dest: /usr/lib/systemd/system/jenkins.service
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+    backup: yes
 
 - name: Reload systemd after replacing service
   command: systemctl daemon-reload

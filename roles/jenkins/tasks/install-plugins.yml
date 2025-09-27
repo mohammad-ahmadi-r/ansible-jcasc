@@ -1,37 +1,63 @@
-- name: Install the plugin
+- name: Check Jenkins login works
+  uri:
+    url: "{{ jenkins_url }}/login"
+    user: "{{ jenkins_user }}"
+    password: "{{ jenkins_password1 }}"
+    force_basic_auth: yes
+    status_code: 200
+
+- name: Get list of installed plugins
+  uri:
+    url: "{{ jenkins_url }}/pluginManager/api/json?depth=1"
+    user: "{{ jenkins_user }}"
+    password: "{{ jenkins_password1 }}"
+    force_basic_auth: yes
+    return_content: yes
+  register: installed_plugins
+
+- set_fact:
+    installed_plugins_list: "{{ installed_plugins.json.plugins | map(attribute='shortName') | list }}"
+    installed_plugins_dict: "{{ installed_plugins.json.plugins | items2dict(key_name='shortName', value_name='version') }}"
+
+- debug:
+    msg: "Installed plugins: {{ installed_plugins_list }}"
+
+- name: Install missing plugins (no version specified)
   jenkins_plugin:
     url_username: "{{ jenkins_user }}"
     url_password: "{{ jenkins_password1 }}"
     url: "{{ jenkins_url }}"
     name: "{{ item.key }}"
+    state: present
   register: jenkins_plugin_unversioned
-  when: >
-    'version' not in item.value
+  when:
+    - "'version' not in item.value"
+    - "item.key not in installed_plugins_list"
   with_dict: "{{ jk_plugins }}"
 
-- name: Install specific version of the plugin
+- name: Install or upgrade specific version of plugin
   jenkins_plugin:
     url_username: "{{ jenkins_user }}"
     url_password: "{{ jenkins_password1 }}"
     url: "{{ jenkins_url }}"
     name: "{{ item.key }}"
     version: "{{ item.value['version'] }}"
+    state: present
   register: jenkins_plugin_versioned
-  when: >
-    'version'  in item.value
+  when: "'version' in item.value and (item.key not in installed_plugins_dict or installed_plugins_dict[item.key] != item.value['version'])"
   with_dict: "{{ jk_plugins }}"
 
 - name: Initiate the fact
   set_fact:
     jenkins_restart_required: false
 
-- name: Check if restart is required by any of the versioned plugins
+- name: Check if restart is required by versioned plugins
   set_fact:
     jenkins_restart_required: true
   when: item.changed
   with_items: "{{ jenkins_plugin_versioned.results }}"
 
-- name: Check if restart is required by any of the unversioned plugins
+- name: Check if restart is required by unversioned plugins
   set_fact:
     jenkins_restart_required: true
   when: item.changed
@@ -49,12 +75,11 @@
     status_code: 200
     timeout: 5
   register: jenkins_service_status
-  # Keep trying for 5 mins in 5 sec intervals
   retries: 60
   delay: 8
   until: >
-      'status' in jenkins_service_status and
-      jenkins_service_status['status'] == 200
+    'status' in jenkins_service_status and
+    jenkins_service_status['status'] == 200
   when: jenkins_restart_required
 
 - name: Reset the fact

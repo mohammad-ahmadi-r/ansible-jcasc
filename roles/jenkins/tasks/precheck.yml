@@ -1,0 +1,35 @@
+- name: Check if Java is installed
+  command: java -version
+  register: java_check
+  ignore_errors: yes
+
+- name: Set java_installed fact
+  set_fact:
+    java_installed: "{{ java_check.rc == 0 }}"
+
+- name: Show Java status
+  debug:
+    msg: >
+      {% if java_installed %}
+        Java is already installed. Version: {{ java_check.stderr_lines | join(' ') }}
+      {% else %}
+        Java is NOT installed.
+      {% endif %}
+
+- name: Check if Jenkins is installed
+  command: jenkins --version
+  register: jenkins_check
+  ignore_errors: yes
+
+- name: Set jenkins_installed fact
+  set_fact:
+    jenkins_installed: "{{ jenkins_check.rc == 0 }}"
+
+- name: Show Jenkins status
+  debug:
+    msg: >
+      {% if jenkins_installed %}
+        Jenkins is already installed. Version: {{ jenkins_check.stdout_lines | join(' ') }}
+      {% else %}
+        Jenkins is NOT installed.
+      {% endif %}
