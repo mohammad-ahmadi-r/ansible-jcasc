@@ -1,6 +1,6 @@
 jenkins:
   systemMessage: "Jenkins configured automatically with JCasC"
-  
+
   securityRealm:
     local:
       allowsSignup: false
@@ -15,7 +15,7 @@ jenkins:
     projectMatrix:
       entries:
         - user:
-            name: "${JENKINS_ADMIN}"
+            name: ${JENKINS_ADMIN}
             permissions:
               - Overall/Administer
         - user:
@@ -35,15 +35,15 @@ credentials:
 
 jobs:
   - script: >
-      folder('MyFolder2') {
+      folder('mamad') {
         displayName('MyFolder2')
         description('Folder for pipeline jobs')
       }
 
   - script: >
-      pipelineJob('MyFolder2/my-github-pipeline') {
+      pipelineJob('mamad/pipeline') {
         triggers {
-          githubPush()
+          authenticationToken('${AUTH_TOKEN}')
         }
         definition {
           cpsScm {

@@ -29,6 +29,7 @@
     url: "{{ jenkins_url }}"
     name: "{{ item.key }}"
     state: present
+    timeout: 3600
   register: jenkins_plugin_unversioned
   when:
     - "'version' not in item.value"
@@ -43,6 +44,7 @@
     name: "{{ item.key }}"
     version: "{{ item.value['version'] }}"
     state: present
+    timeout: 3600
   register: jenkins_plugin_versioned
   when: "'version' in item.value and (item.key not in installed_plugins_dict or installed_plugins_dict[item.key] != item.value['version'])"
   with_dict: "{{ jk_plugins }}"

@@ -34,7 +34,9 @@ Pipelines are integrated with GitHub repositories and can be triggered both via 
 - SSH access to target machine
 - Ansible installed on your control machine
 - GitHub repository for your project code
+- Install git and docker on jenkins runner
 - Optional: Ngrok (for external webhook testing)
+
 
 ---
 
@@ -51,6 +53,9 @@ Remote call:
 ```bash
 curl http://<jenkins-username>:<jenkins-password>@<jekins-node>:<jenkins-port>/job/<folder-name>/job/<job-name>/build\?token=<auth-token>
 ```
+Browser:
+http://jenkins-url:jenkins-port
+
 ---
 ## Environment variables
 set it by changing jenkins.service to automate it
@@ -63,6 +68,7 @@ Environment="JENKINS_ADMIN_PASSWORD=password"
 Environment="GITHUB_CREDS=github-https-creds"
 Environment="GITHUB_USER=github-username"
 Environment="GITHUB_TOKEN=github-personal-access-token"
+Environment="AUTH_TOKEN=456321" #for remote call
 ```
 ---
 ## Repository Structure

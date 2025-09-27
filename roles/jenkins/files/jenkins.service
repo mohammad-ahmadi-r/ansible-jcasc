@@ -24,6 +24,12 @@ Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard
 Environment="CASC_JENKINS_CONFIG=/var/lib/jenkins/casc_configs/casc.yaml"
 
 Environment="JENKINS_PORT=8081"
+Environment="GITHUB_TOKEN=gituhb-personal-access-token"
+Environment="JENKINS_ADMIN=mamad"
+Environment="JENKINS_ADMIN_PASSWORD=123456"
+Environment="GITHUB_CREDS=github-https-creds"
+Environment="GITHUB_USER=github-username"
+Environment="AUTH_TOKEN=456321"
 
 [Install]
 WantedBy=multi-user.target
