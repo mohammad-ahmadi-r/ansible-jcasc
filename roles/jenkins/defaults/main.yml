@@ -2,11 +2,7 @@
 # defaults file for part24-jenkins-jcasc
 jenkins_user: "mamad"
 jenkins_password: "123456"
-jenkins_url: "http://127.0.0.1:8081"
-jenkins_pkgs:
-  - fontconfig 
-  - openjdk-17-jre
-  - jenkins
+jenkins_url: "http://<jenkins-server>:<jenkins-port>"
 jk_plugins:
   configuration-as-code:
     enabled: True
