@@ -25,14 +25,14 @@
     group: jenkins
     mode: '0644'
 
-- name: Replace jenkins system config 
-  copy:
-    src: jenkins.service
-    dest: /usr/lib/systemd/system/jenkins.service
-    owner: jenkins
-    group: jenkins
-    mode: '0644'
-    backup: yes
+# - name: Replace jenkins system config 
+#   copy:
+#     src: jenkins.service
+#     dest: /usr/lib/systemd/system/jenkins.service
+#     owner: jenkins
+#     group: jenkins
+#     mode: '0644'
+#     backup: yes
 
 - name: Reload systemd after replacing service
   command: systemctl daemon-reload
